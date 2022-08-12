@@ -295,6 +295,32 @@ class API:
 
         return result
 
+    def get_sources_paged(self, page: int) -> List[Source]:
+        """
+        Returns a list of all the sources from the Server.
+
+        :returns: List of Source objects.
+        """
+        print("getting paged sources")
+        path_query = "api/v1/sources_paged/" + page
+        method = "GET"
+
+        data, status_code, headers = self._send_json_request(
+            method,
+            path_query,
+            headers=self.req_headers,
+            timeout=self.default_request_timeout,
+        )
+
+        sources = data["sources"]
+        result = []  # type: List[Source]
+
+        for source in sources:
+            s = Source(**source)
+            result.append(s)
+
+        return result
+
     def get_source(self, source: Source) -> Source:
         """
         This will return a single Source based on UUID.
