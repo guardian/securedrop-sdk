@@ -295,15 +295,15 @@ class API:
 
         return result
 
-    def get_sources_paged(self, page: int) -> List[Source]:
+    def get_sources_paged(self, offset: int = 0, limit: int = 100) -> Tuple[List[Source], int]:
         """
         Returns a list of all the sources from the Server.
 
         :returns: List of Source objects.
         """
-        print("getting paged sources, page: " + page)
-        path_query = "api/v1/sources_paged/" + page
+        path_query = "api/v1/sources_paged?offset={}&limit={}".format(offset, limit)
         method = "GET"
+        print("getting paged sources, url: " + path_query)
 
         data, status_code, headers = self._send_json_request(
             method,
@@ -312,17 +312,15 @@ class API:
             timeout=self.default_request_timeout,
         )
 
-        print("returned data")
-        print(data)
-
         sources = data["sources"]
+        total_results = data["totalResults"]
         result = []  # type: List[Source]
 
         for source in sources:
             s = Source(**source)
             result.append(s)
 
-        return result
+        return result, total_results
 
     def get_source(self, source: Source) -> Source:
         """
