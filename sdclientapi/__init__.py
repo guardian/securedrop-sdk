@@ -301,7 +301,7 @@ class API:
 
         :returns: List of Source objects.
         """
-        print("getting paged sources")
+        print("getting paged sources, page: " + page)
         path_query = "api/v1/sources_paged/" + page
         method = "GET"
 
@@ -311,6 +311,9 @@ class API:
             headers=self.req_headers,
             timeout=self.default_request_timeout,
         )
+
+        print("returned data")
+        print(data)
 
         sources = data["sources"]
         result = []  # type: List[Source]
